@@ -1,0 +1,25 @@
+{
+    "id": 0,
+    "owner": "ribetina",
+    "type": "catamaran",
+    "length": 30,
+    "berths": 3,
+    "bathrooms": 3,
+    "equipment": [
+        "A/C",
+        "inverter",
+        "generator",
+        "water purifier"
+    ],
+    "crew": [
+        "skipper",
+        "host"
+    ],
+    "route": [
+        "Split",
+        "Brac",
+        "Hvar",
+        "Vis",
+        "Split"
+    ]
+}

@@ -1,0 +1,44 @@
+[
+    {
+        "id": 0,
+        "owner": "ribetina",
+        "type": "catamaran",
+        "length": 30,
+        "berths": 3,
+        "bathrooms": 3,
+        "equipment": [
+            "A/C",
+            "inverter",
+            "generator",
+            "water purifier"
+        ],
+        "crew": [
+            "skipper",
+            "host"
+        ],
+        "route": [
+            "Split",
+            "Brac",
+            "Hvar",
+            "Vis",
+            "Split"
+        ]
+    },
+    {
+        "id": 1,
+        "owner": "ribetina",
+        "type": "monohull",
+        "length": 20,
+        "berths": 2,
+        "bathrooms": 1,
+        "equipment": [],
+        "crew": [],
+        "route": [
+            "Zadar",
+            "Dugi Otok",
+            "Kornati",
+            "Zut",
+            "Zadar"
+        ]
+    }
+]

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            h1, h2, h3, h4, h5, h6 {
+            font-weight: bold;
+            padding: 5px;
+            }
+
+            h1 {
+            margin-top: 5rem;
+            background: lightgray;
+            border-bottom: 1px solid gray;
+            }
+
+            h2 {
+            margin-top: 3rem;
+            background: #eee;
+            }
+
+            h1 {
+            margin-top: 2rem;
+            }
+
+            blockquote {
+            background: #E6F2E6;
+            border-left: 3px solid #408040;
+            font-style: italic;
+            padding-left: 5px;
+            margin-left: 2px;
+            }
+            pre {
+            background: #E0F0FF;
+            border-left: 5px solid #55AAFF;
+            padding: 5px;
+            margin-left: 2px;
+            }
+            code {
+            background: #E0F0FF;
+            font-family: JetBrains Mono NL, Courier New, Monospaced;
+            font-size: 0.9em;
+            }
+            table {
+            border-spacing: 0px;
+            border-right: 1px solid gray;
+            border-bottom: 1px solid gray;
+            }
+            th, td {
+            border-left: 1px solid gray;
+            border-top: 1px solid gray;
+            }
+            th {
+            background: #D4D4D4;
+            font-weight: 600;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Prijedlog API-ja (klijent)</h1>
+        <p>Ovo je popis funkcija API-ja s primjerima koji sluzi kao referenca.</p>
+        <h2>/register</h2>
+        <p>Registracija korisnika, API na zahtjev trazi korisnika u bazi i ako ne postoji kreira korisnika u bazi i vraca izvjestaj o uspjehu.</p>
+        <h3>Request</h3>
+        <p><code>
+        {
+            "email": "neki@mail.com"
+            "username": "riba",
+            "password": "nekalozinka123",
+            "iznajmljivac": false
+        }</code></p>
+        <h3>Response (success)</h3>
+        <p><code>
+        {
+            "success": true
+        }</code></p>
+        <h3>Response (failure)</h3>
+        <p><code>
+        {
+            "success": false,
+            "reason": "username_taken"
+        }</code>
+        Moguci razlozi: <code>username_taken</code>, <code>email_taken</code>.</p>
+        <h2>/login</h2>
+        <p>Prijava korisnika, API na zahtjev trazi korisnika u bazi i ako postoji i lozinka odgovara, vraca token koji ce se koristiti u daljnjoj komunikaciji.</p>
+        <h3>Request</h3>
+        <p><code>
+        {
+            "username": "riba",
+            "password": "nekalozinka123"
+        }</code></p>
+        <h3>Response (success)</h3>
+        <p><code>
+        {
+            "success": true,
+            "token": "03bb02c4-a3f1-478f-8ea9-fc376539f8fb"
+        }</code></p>
+        <h3>Response (failure)</h3>
+        <p><code>
+        {
+            "success": false
+        }</code></p>
+        <h2>/logout</h2>
+        <p>Odjava korisnika, API brise trenutno aktivan token.</p>
+        <h3>Request</h3>
+        <p><code>
+        {
+            "token": "03bb02c4-a3f1-478f-8ea9-fc376539f8fb"
+        }</code></p>
+        <h3>Response (success)</h3>
+        <p><code>
+        {
+            "success": true
+        }</code></p>
+        <h3>Response (failure)</h3>
+        <p><code>
+        {
+            "success": false
+        }</code></p>
+        <h2>/ships</h2>
+        <p>Dohvat svih linija, moguce dodati <code>/&lt;id&gt;</code> na kraj za dohvat jedne linije.</p>
+        <h3>Request</h3>
+        <p><code>
+        {
+            "token": "03bb02c4-a3f1-478f-8ea9-fc376539f8fb"
+        }</code></p>
+        <h3>Response</h3>
+        <p><code>
+        [
+            {
+                "id": 0,
+                "owner": "ribetina",
+                "type": "catamaran",
+                "length": 30,
+                "berths": 3,
+                "bathrooms": 3,
+                "equipment": [
+                    "A/C", "inverter", "generator", "water purifier"
+                ],
+                "crew": [
+                    "skipper", "host"
+                ],
+                "route": [
+                    "Split", "Brac", "Hvar", "Vis", "Split"
+                ]
+            },
+            {
+                "id": 1,
+                "owner": "ribetina",
+                "type": "monohull",
+                "length": 20,
+                "berths": 2,
+                "bathrooms": 1,
+                "equipment": [],
+                "crew": [],
+                "route": [
+                    "Zadar", "Dugi Otok", "Kornati", "Zut", "Zadar"
+                ]
+            }
+        ]</code></p>
+        <h3>Response (za npr. <code>/ships/0</code>)</h3>
+        <p><code>
+        {
+            "id": 0,
+            "owner": "ribetina",
+            "type": "catamaran",
+            "length": 30,
+            "berths": 3,
+            "bathrooms": 3,
+            "equipment": [
+                "A/C", "inverter", "generator", "water purifier"
+            ],
+            "crew": [
+                "skipper", "host"
+            ],
+            "route": [
+                "Split", "Brac", "Hvar", "Vis", "Split"
+            ]
+        }</code></p>
+        <h2>/shipLocation/&lt;id&gt;</h2>
+        <p>Dohvaca trenutnu lokaciju broda.</p>
+        <h3>Request</h3>
+        <p><code>
+        {
+            "token": "03bb02c4-a3f1-478f-8ea9-fc376539f8fb"
+        }</code></p>
+        <h3>Response (success)</h3>
+        <p><code>
+        {
+            "success": true,
+            "latitude": 45.516,
+            "longitude": -122.636
+        }</code></p>
+        <h3>Response (failure)</h3>
+        <p><code>
+        {
+            "success": false
+        }</code></p>
+        <h2>/bookShip/&lt;id&gt;</h2>
+        <p>Zahtjev za rezervacijom broda.</p>
+        <h3>Request</h3>
+        <p><code>
+        {
+            "token": "03bb02c4-a3f1-478f-8ea9-fc376539f8fb"
+        }</code></p>
+        <h3>Response (success)</h3>
+        <p><code>
+        {
+            "success": true
+        }</code></p>
+        <h3>Response (failure)</h3>
+        <p><code>
+        {
+            "success": false
+        }</code></p>
+        <h2>/bookedShips</h2>
+        <p>Dohvat svih rezerviranih linija za trenutnog korisnika</p>
+        <h3>Request</h3>
+        <p><code>
+        {
+            "token": "03bb02c4-a3f1-478f-8ea9-fc376539f8fb"
+        }</code></p>
+        <h3>Response</h3>
+        <p><code>
+        [
+            {
+                "id": 0,
+                "type": "catamaran",
+                "length": 30,
+                "berths": 3,
+                "bathrooms": 3,
+                "equipment": [
+                    "A/C", "inverter", "generator", "water purifier"
+                ],
+                "crew": [
+                    "skipper", "host"
+                ],
+                "route": [
+                    "Split", "Brac", "Hvar", "Vis", "Split"
+                ]
+            },
+            {
+                "id": 1,
+                "type": "monohull",
+                "length": 20,
+                "berths": 2,
+                "bathrooms": 1,
+                "equipment": [],
+                "crew": [],
+                "route": [
+                    "Zadar", "Dugi Otok", "Kornati", "Zut", "Zadar"
+                ]
+            }
+        ]</code></p>
+        <h3>Response (empty)</h3>
+        <p><code>
+        []</code></p>
+        <h2>/receiveMessages</h2>
+        <p>Dohvat svih novih poruka poslanih korisniku.</p>
+        <h3>Request</h3>
+        <p><code>
+        {
+            "token": "03bb02c4-a3f1-478f-8ea9-fc376539f8fb"
+        }</code></p>
+        <h3>Response</h3>
+        <p><code>
+        [
+            {
+                "from": "ribetina",
+                "sent": "2012-04-23T18:25:43.511Z",
+                "body": "Riba ribi grize rep"
+            },
+            {
+                "from": "ribetina",
+                "sent": "2012-04-23T18:26:43.511Z",
+                "body": "Oces ribicu?"
+            }
+        ]</code></p>
+        <h3>Response (empty)</h3>
+        <p><code>
+        []</code></p>
+        <h2>/sendMessage</h2>
+        <p>Zahtjev za slanjem poruke nekom korisniku.</p>
+        <h3>Request</h3>
+        <p><code>
+        {
+            "token": "03bb02c4-a3f1-478f-8ea9-fc376539f8fb",
+            "to": "ribetina",
+            "body": "hocuuuuu :)"
+        }</code></p>
+        <h3>Response (success)</h3>
+        <p><code>
+        {
+            "success": true
+        }</code></p>
+        <h3>Response (failure)</h3>
+        <p><code>
+        {
+            "success": false
+        }</code></p>
+        <h1>Prijedlog API-ja (iznajmljivac)</h1>
+        <p>Iznajmljivaci imaju sve iste pozive kao i klijent, te jos ove dodatne.</p>
+        <h2>/addShip</h2>
+        <p>Dodaje liniju u dostupne linije.</p>
+        <h3>Request</h3>
+        <p><code>
+        {
+            "token": "03bb02c4-a3f1-478f-8ea9-fc376539f8fb"
+            "ship": {
+                "type": "catamaran",
+                "length": 30,
+                "berths": 3,
+                "bathrooms": 3,
+                "equipment": [
+                    "A/C", "inverter", "generator", "water purifier"
+                ],
+                "crew": [
+                    "skipper", "host"
+                ],
+                "route": [
+                    "Split", "Brac", "Hvar", "Vis", "Split"
+                ]
+            }
+        }</code></p>
+        <h3>Response (success)</h3>
+        <p><code>
+        {
+            "success": true,
+            "id": 0
+        }</code></p>
+        <h3>Response (failure)</h3>
+        <p><code>
+        {
+            "success": false
+        }</code></p>
+        <h2>/updateShip</h2>
+        <p>Mijenja podatke linije.</p>
+        <h3>Request</h3>
+        <p><code>
+        {
+            "token": "03bb02c4-a3f1-478f-8ea9-fc376539f8fb"
+            "ship": {
+                "id": 0
+                "type": "catamaran",
+                "length": 30,
+                "berths": 3,
+                "bathrooms": 3,
+                "equipment": [
+                    "A/C", "inverter", "generator", "water purifier"
+                ],
+                "crew": [
+                    "skipper", "host"
+                ],
+                "route": [
+                    "Split", "Brac", "Hvar", "Vis", "Split"
+                ]
+            }
+        }</code></p>
+        <h3>Response (success)</h3>
+        <p><code>
+        {
+            "success": true
+        }</code></p>
+        <h3>Response (failure)</h3>
+        <p><code>
+        {
+            "success": false
+        }</code></p>
+        <h2>/deleteShip/&lt;id&gt;</h2>
+        <p>Brise liniju.</p>
+        <h3>Request</h3>
+        <p><code>
+        {
+            "token": "03bb02c4-a3f1-478f-8ea9-fc376539f8fb"
+        }</code></p>
+        <h3>Response (success)</h3>
+        <p><code>
+        {
+            "success": true
+        }</code></p>
+        <h3>Response (failure)</h3>
+        <p><code>
+        {
+            "success": false
+        }</code></p>
+    </body>
+</html>
