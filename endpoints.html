@@ -34,11 +34,12 @@
             border-left: 5px solid #55AAFF;
             padding: 5px;
             margin-left: 2px;
+            font-family: JetBrains Mono NL, Courier New, Monospaced;
             }
             code {
             background: #E0F0FF;
             font-family: JetBrains Mono NL, Courier New, Monospaced;
-            font-size: 0.9em;
+            font-size: 1rem;
             }
             table {
             border-spacing: 0px;
@@ -61,70 +62,70 @@
         <h2>/register</h2>
         <p>Registracija korisnika, API na zahtjev trazi korisnika u bazi i ako ne postoji kreira korisnika u bazi i vraca izvjestaj o uspjehu.</p>
         <h3>Request</h3>
-        <p><code>
+        <p><pre>
         {
             "email": "neki@mail.com"
             "username": "riba",
             "password": "nekalozinka123",
-            "iznajmljivac": false
-        }</code></p>
+            "renter": false
+        }</pre></p>
         <h3>Response (success)</h3>
-        <p><code>
+        <p><pre>
         {
             "success": true
-        }</code></p>
+        }</pre></p>
         <h3>Response (failure)</h3>
-        <p><code>
+        <p><pre>
         {
             "success": false,
             "reason": "username_taken"
-        }</code>
+        }</pre>
         Moguci razlozi: <code>username_taken</code>, <code>email_taken</code>.</p>
         <h2>/login</h2>
         <p>Prijava korisnika, API na zahtjev trazi korisnika u bazi i ako postoji i lozinka odgovara, vraca token koji ce se koristiti u daljnjoj komunikaciji.</p>
         <h3>Request</h3>
-        <p><code>
+        <p><pre>
         {
             "username": "riba",
             "password": "nekalozinka123"
-        }</code></p>
+        }</pre></p>
         <h3>Response (success)</h3>
-        <p><code>
+        <p><pre>
         {
             "success": true,
             "token": "03bb02c4-a3f1-478f-8ea9-fc376539f8fb"
-        }</code></p>
+        }</pre></p>
         <h3>Response (failure)</h3>
-        <p><code>
+        <p><pre>
         {
             "success": false
-        }</code></p>
+        }</pre></p>
         <h2>/logout</h2>
         <p>Odjava korisnika, API brise trenutno aktivan token.</p>
         <h3>Request</h3>
-        <p><code>
+        <p><pre>
         {
             "token": "03bb02c4-a3f1-478f-8ea9-fc376539f8fb"
-        }</code></p>
+        }</pre></p>
         <h3>Response (success)</h3>
-        <p><code>
+        <p><pre>
         {
             "success": true
-        }</code></p>
+        }</pre></p>
         <h3>Response (failure)</h3>
-        <p><code>
+        <p><pre>
         {
             "success": false
-        }</code></p>
+        }</pre></p>
         <h2>/ships</h2>
         <p>Dohvat svih linija, moguce dodati <code>/&lt;id&gt;</code> na kraj za dohvat jedne linije.</p>
         <h3>Request</h3>
-        <p><code>
+        <p><pre>
         {
             "token": "03bb02c4-a3f1-478f-8ea9-fc376539f8fb"
-        }</code></p>
+        }</pre></p>
         <h3>Response</h3>
-        <p><code>
+        <p><pre>
         [
             {
                 "id": 0,
@@ -156,9 +157,9 @@
                     "Zadar", "Dugi Otok", "Kornati", "Zut", "Zadar"
                 ]
             }
-        ]</code></p>
+        ]</pre></p>
         <h3>Response (za npr. <code>/ships/0</code>)</h3>
-        <p><code>
+        <p><pre>
         {
             "id": 0,
             "owner": "ribetina",
@@ -175,52 +176,52 @@
             "route": [
                 "Split", "Brac", "Hvar", "Vis", "Split"
             ]
-        }</code></p>
+        }</pre></p>
         <h2>/shipLocation/&lt;id&gt;</h2>
         <p>Dohvaca trenutnu lokaciju broda.</p>
         <h3>Request</h3>
-        <p><code>
+        <p><pre>
         {
             "token": "03bb02c4-a3f1-478f-8ea9-fc376539f8fb"
-        }</code></p>
+        }</pre></p>
         <h3>Response (success)</h3>
-        <p><code>
+        <p><pre>
         {
             "success": true,
             "latitude": 45.516,
             "longitude": -122.636
-        }</code></p>
+        }</pre></p>
         <h3>Response (failure)</h3>
-        <p><code>
+        <p><pre>
         {
             "success": false
-        }</code></p>
+        }</pre></p>
         <h2>/bookShip/&lt;id&gt;</h2>
         <p>Zahtjev za rezervacijom broda.</p>
         <h3>Request</h3>
-        <p><code>
+        <p><pre>
         {
             "token": "03bb02c4-a3f1-478f-8ea9-fc376539f8fb"
-        }</code></p>
+        }</pre></p>
         <h3>Response (success)</h3>
-        <p><code>
+        <p><pre>
         {
             "success": true
-        }</code></p>
+        }</pre></p>
         <h3>Response (failure)</h3>
-        <p><code>
+        <p><pre>
         {
             "success": false
-        }</code></p>
+        }</pre></p>
         <h2>/bookedShips</h2>
         <p>Dohvat svih rezerviranih linija za trenutnog korisnika</p>
         <h3>Request</h3>
-        <p><code>
+        <p><pre>
         {
             "token": "03bb02c4-a3f1-478f-8ea9-fc376539f8fb"
-        }</code></p>
+        }</pre></p>
         <h3>Response</h3>
-        <p><code>
+        <p><pre>
         [
             {
                 "id": 0,
@@ -250,19 +251,19 @@
                     "Zadar", "Dugi Otok", "Kornati", "Zut", "Zadar"
                 ]
             }
-        ]</code></p>
+        ]</pre></p>
         <h3>Response (empty)</h3>
-        <p><code>
-        []</code></p>
+        <p><pre>
+        []</pre></p>
         <h2>/receiveMessages</h2>
         <p>Dohvat svih novih poruka poslanih korisniku.</p>
         <h3>Request</h3>
-        <p><code>
+        <p><pre>
         {
             "token": "03bb02c4-a3f1-478f-8ea9-fc376539f8fb"
-        }</code></p>
+        }</pre></p>
         <h3>Response</h3>
-        <p><code>
+        <p><pre>
         [
             {
                 "from": "ribetina",
@@ -274,35 +275,35 @@
                 "sent": "2012-04-23T18:26:43.511Z",
                 "body": "Oces ribicu?"
             }
-        ]</code></p>
+        ]</pre></p>
         <h3>Response (empty)</h3>
-        <p><code>
-        []</code></p>
+        <p><pre>
+        []</pre></p>
         <h2>/sendMessage</h2>
         <p>Zahtjev za slanjem poruke nekom korisniku.</p>
         <h3>Request</h3>
-        <p><code>
+        <p><pre>
         {
             "token": "03bb02c4-a3f1-478f-8ea9-fc376539f8fb",
             "to": "ribetina",
             "body": "hocuuuuu :)"
-        }</code></p>
+        }</pre></p>
         <h3>Response (success)</h3>
-        <p><code>
+        <p><pre>
         {
             "success": true
-        }</code></p>
+        }</pre></p>
         <h3>Response (failure)</h3>
-        <p><code>
+        <p><pre>
         {
             "success": false
-        }</code></p>
+        }</pre></p>
         <h1>Prijedlog API-ja (iznajmljivac)</h1>
         <p>Iznajmljivaci imaju sve iste pozive kao i klijent, te jos ove dodatne.</p>
         <h2>/addShip</h2>
         <p>Dodaje liniju u dostupne linije.</p>
         <h3>Request</h3>
-        <p><code>
+        <p><pre>
         {
             "token": "03bb02c4-a3f1-478f-8ea9-fc376539f8fb"
             "ship": {
@@ -320,22 +321,22 @@
                     "Split", "Brac", "Hvar", "Vis", "Split"
                 ]
             }
-        }</code></p>
+        }</pre></p>
         <h3>Response (success)</h3>
-        <p><code>
+        <p><pre>
         {
             "success": true,
             "id": 0
-        }</code></p>
+        }</pre></p>
         <h3>Response (failure)</h3>
-        <p><code>
+        <p><pre>
         {
             "success": false
-        }</code></p>
+        }</pre></p>
         <h2>/updateShip</h2>
         <p>Mijenja podatke linije.</p>
         <h3>Request</h3>
-        <p><code>
+        <p><pre>
         {
             "token": "03bb02c4-a3f1-478f-8ea9-fc376539f8fb"
             "ship": {
@@ -354,33 +355,33 @@
                     "Split", "Brac", "Hvar", "Vis", "Split"
                 ]
             }
-        }</code></p>
+        }</pre></p>
         <h3>Response (success)</h3>
-        <p><code>
+        <p><pre>
         {
             "success": true
-        }</code></p>
+        }</pre></p>
         <h3>Response (failure)</h3>
-        <p><code>
+        <p><pre>
         {
             "success": false
-        }</code></p>
+        }</pre></p>
         <h2>/deleteShip/&lt;id&gt;</h2>
         <p>Brise liniju.</p>
         <h3>Request</h3>
-        <p><code>
+        <p><pre>
         {
             "token": "03bb02c4-a3f1-478f-8ea9-fc376539f8fb"
-        }</code></p>
+        }</pre></p>
         <h3>Response (success)</h3>
-        <p><code>
+        <p><pre>
         {
             "success": true
-        }</code></p>
+        }</pre></p>
         <h3>Response (failure)</h3>
-        <p><code>
+        <p><pre>
         {
             "success": false
-        }</code></p>
+        }</pre></p>
     </body>
 </html>

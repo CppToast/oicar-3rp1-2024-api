@@ -17,6 +17,7 @@ def read_file(filename):
 
 
 @app.route('/')
+@app.route('/index')
 def index():
     return read_file('endpoints.html')
 
@@ -41,7 +42,7 @@ def ships():
     return read_file('examples/response_ships_success.json')
 
 @app.route('/ships/<id>')
-def ships(id):
+def ships_id(id):
     #TODO: implement properly
     return read_file('examples/response_singleship_success.json')
 
@@ -81,4 +82,4 @@ def delete_ship(id):
     return read_file('examples/response_generic_success.json')
 
 
-app.run()
+app.run(host='0.0.0.0')
