@@ -1,4 +1,4 @@
-import pyodbc 
+import pyodbc
 
 SERVER = '192.168.1.97'
 DATABASE = 'PrachtYacht'
@@ -9,7 +9,9 @@ connectionString = f'DRIVER={{SQL Server}};SERVER={SERVER};DATABASE={DATABASE};U
 conn = pyodbc.connect(connectionString)
 
 cursor = conn.cursor()
-cursor.execute('SELECT * FROM Persons')
+# cursor.execute('SELECT * FROM RegisteredUser')
 
-for row in cursor:
-    print('row = %r' % (row,))
+# for row in cursor:
+#     print(row)
+
+

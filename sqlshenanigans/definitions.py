@@ -107,6 +107,7 @@ columns = [
     ("SenderID", "int", ["FOREIGN KEY REFERENCES RegisteredUser(IDUser)"]),
     ("RecipientID", "int", ["FOREIGN KEY REFERENCES RegisteredUser(IDUser)"]),
     ("Body", "nvarchar(200)", []),
+    ("Timestamp", "datetime", []),
     ("IsDelivered", "bit", []),
 ]
 tables.append(Table(table_name, columns))
