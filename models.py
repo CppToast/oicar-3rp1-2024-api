@@ -9,6 +9,12 @@ class User:
     renter: bool
 
 @dataclass
+class Token:
+    id: int
+    user_id: int
+    guid: str
+
+@dataclass
 class Ship:
     id: int
     owner: str
