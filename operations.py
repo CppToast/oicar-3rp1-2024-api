@@ -4,14 +4,9 @@ import hashlib
 import database
 import models
 
-# https://docs.python.org/3/library/dataclasses.html#dataclasses.asdict
-# https://stackoverflow.com/questions/45412228/sending-json-and-status-code-with-a-flask-response
-# convert dataclass to dict, then dict to json
-# what about reverse?
-
 def token_is_valid(guid):
     try:
-        database.get_token(guid)
+        get_current_user(guid)
         return True
     except:
         return False
@@ -24,10 +19,14 @@ def hash_password(password):
     new_password = password + salt
     return hashlib.md5(new_password.encode()).hexdigest()
 
+def get_current_user(guid):
+    token = database.get_token(guid)
+    return database.get_user_by_id(token.user_id)
+
 def register(user):
     try:
         try:
-            database.get_user(user.username)
+            database.get_user_by_username(user.username)
             return {'success': False, 'reason': 'username_taken'}
         except: pass 
 
@@ -44,7 +43,7 @@ def register(user):
 
 def login(username, password):
     try:
-        user = database.get_user(username)
+        user = database.get_user_by_username(username)
         if user.passwordhash != hash_password(password): raise Exception('Invalid password!')
 
         token = database.register_token(user.id, generate_token())
@@ -60,42 +59,42 @@ def logout(guid):
     except:
         return {'success': False}
 
-def get_ships(token):
+def get_ships(guid):
+    if not token_is_valid(guid): raise PermissionError('Invalid token!')
+    return database.get_ships()
+
+def get_ship(guid, id):
+    if not token_is_valid(guid): raise PermissionError('Invalid token!')
+    return database.get_ship(id)
+
+def get_ship_location(guid, id):
     #TODO: implement properly
     return
 
-def get_ship(token, id):
+def book_ship(guid, id):
     #TODO: implement properly
     return
 
-def get_ship_location(token, id):
+def get_booked_ships(guid):
     #TODO: implement properly
     return
 
-def book_ship(token, id):
+def receive_messages(guid):
     #TODO: implement properly
     return
 
-def get_booked_ships(token):
+def send_message(guid, message):
     #TODO: implement properly
     return
 
-def receive_messages(token):
+def add_ship(guid, ship):
     #TODO: implement properly
     return
 
-def send_message(token, message):
+def update_ship(guid, ship):
     #TODO: implement properly
     return
 
-def add_ship(token, ship):
-    #TODO: implement properly
-    return
-
-def update_ship(token, ship):
-    #TODO: implement properly
-    return
-
-def delete_ship(token, id):
+def delete_ship(guid, id):
     #TODO: implement properly
     return

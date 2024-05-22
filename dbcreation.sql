@@ -1,3 +1,4 @@
+/*
 USE master
 GO
 DROP DATABASE IF EXISTS PrachtYacht
@@ -6,6 +7,7 @@ CREATE DATABASE PrachtYacht
 GO
 USE PrachtYacht
 GO
+*/
 
 --RegisteredUser
 --Table Creation SQL:
@@ -39,6 +41,16 @@ END;
 GO
 
 CREATE PROCEDURE SelectSingleRegisteredUser
+    @IDUser int
+AS
+BEGIN
+    SELECT * FROM RegisteredUser
+    WHERE IDUser = @IDUser;
+END;
+
+GO
+
+CREATE PROCEDURE SelectSingleRegisteredUserByUsername
     @Username nvarchar(50)
 AS
 BEGIN
@@ -165,6 +177,27 @@ END;
 
 GO
 
+CREATE PROCEDURE SelectSingleLocation
+    @IDLocation int
+AS
+BEGIN
+    SELECT * FROM Location
+    WHERE IDLocation = @IDLocation;
+END;
+
+GO
+
+CREATE PROCEDURE SelectSingleLocationByName
+    @Name nvarchar(50)
+AS
+BEGIN
+    SELECT * FROM Location
+    WHERE Name = @Name;
+END;
+
+GO
+
+
 CREATE PROCEDURE UpdateLocation
     @IDLocation int,
     @Name nvarchar(50)
@@ -188,7 +221,7 @@ GO
 --Route
 --Table Creation SQL:
 CREATE TABLE Route (
-    IDRoute int PRIMARY KEY IDENTITY(1,1),
+    IDRoute int PRIMARY KEY,
     LocationID int FOREIGN KEY REFERENCES Location(IDLocation),
     NextRouteID int FOREIGN KEY REFERENCES Route(IDRoute)
 );
@@ -197,11 +230,11 @@ GO
 --CRUD Operations SQL:
 
 CREATE PROCEDURE InsertRoute
-    @LocationID int, @NextRouteID int
+    @IDRoute int, @LocationID int, @NextRouteID int
 AS
 BEGIN
-    INSERT INTO Route (LocationID, NextRouteID)
-    VALUES (@LocationID, @NextRouteID);
+    INSERT INTO Route (IDRoute, LocationID, NextRouteID)
+    VALUES (@IDRoute, @LocationID, @NextRouteID);
 END;
 
 GO
@@ -255,6 +288,7 @@ AS
 BEGIN
     INSERT INTO Ship (OwnerID, Type, Length, Berths, Bathrooms, RouteID)
     VALUES (@OwnerID, @Type, @Length, @Berths, @Bathrooms, @RouteID);
+    SELECT SCOPE_IDENTITY() AS IDShip;
 END;
 
 GO
@@ -263,6 +297,16 @@ CREATE PROCEDURE SelectShip
 AS
 BEGIN
     SELECT * FROM Ship;
+END;
+
+GO
+
+CREATE PROCEDURE SelectSingleShip
+    @IDShip int
+AS
+BEGIN
+    SELECT * FROM Ship
+    WHERE IDShip = @IDShip;
 END;
 
 GO
@@ -311,6 +355,26 @@ CREATE PROCEDURE SelectEquipment
 AS
 BEGIN
     SELECT * FROM Equipment;
+END;
+
+GO
+
+CREATE PROCEDURE SelectSingleEquipment
+    @IDEquipment int
+AS
+BEGIN
+    SELECT * FROM Equipment
+    WHERE IDEquipment = @IDEquipment;
+END;
+
+GO
+
+CREATE PROCEDURE SelectSingleEquipmentByName
+    @Name nvarchar(50)
+AS
+BEGIN
+    SELECT * FROM Equipment
+    WHERE Name = @Name;
 END;
 
 GO
@@ -408,6 +472,26 @@ CREATE PROCEDURE SelectCrewRole
 AS
 BEGIN
     SELECT * FROM CrewRole;
+END;
+
+GO
+
+CREATE PROCEDURE SelectSingleCrewRole
+    @IDCrewRole int
+AS
+BEGIN
+    SELECT * FROM CrewRole
+    WHERE IDCrewRole = @IDCrewRole;
+END;
+
+GO
+
+CREATE PROCEDURE SelectSingleCrewRoleByName
+    @Name nvarchar(50)
+AS
+BEGIN
+    SELECT * FROM CrewRole
+    WHERE Name = @Name;
 END;
 
 GO

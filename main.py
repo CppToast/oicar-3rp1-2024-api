@@ -62,13 +62,29 @@ def logout():
 
 @app.route('/ships', methods = ['POST'])
 def ships():
-    #TODO: implement properly
-    return read_file('examples/response_ships_success.json')
+    # try:
+        content = flask.request.json
+        token = content['token']
+        try:
+            ret = operations.get_ships(token)
+            return flask.jsonify(ret)
+        except PermissionError as ex:
+            return read_file('examples/response_generic_fail.json'), 403
+    # except:
+    #     return read_file('examples/response_generic_fail.json'), 400
 
 @app.route('/ships/<id>', methods = ['POST'])
 def ships_id(id):
-    #TODO: implement properly
-    return read_file('examples/response_singleship_success.json')
+    try:
+        content = flask.request.json
+        token = content['token']
+        try:
+            ret = operations.get_ship(token, id)
+            return flask.jsonify(ret)
+        except PermissionError as ex:
+            return read_file('examples/response_generic_fail.json'), 403
+    except:
+        return read_file('examples/response_generic_fail.json'), 400
 
 @app.route('/bookShip/<id>', methods = ['POST'])
 def book_ship(id):
