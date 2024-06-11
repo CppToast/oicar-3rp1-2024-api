@@ -3,12 +3,14 @@
 import json
 import bs4
 import flask
+import dacite
 
 import operations
 import models
 
 app = flask.Flask(__name__)
 
+JSON_FAIL_DIR = 'examples/response_generic_fail.json'
 
 def read_file(filename):
     try:
@@ -35,19 +37,19 @@ def register():
         ret = operations.register(user)
         return flask.jsonify(ret), 400 if ret['success'] == False else 200
     except:
-        return read_file('examples/response_generic_fail.json'), 400
+        return read_file(JSON_FAIL_DIR), 400
 
 @app.route('/login', methods = ['POST'])
 def login():
-    # try:
+    try:
         content = flask.request.json
         username = content['username']
         password = content['password']
         ret = operations.login(username, password)
         if ret['success'] == False: raise Exception('Operation failed!')
         return flask.jsonify(ret)
-    # except:
-        return read_file('examples/response_generic_fail.json'), 400
+    except:
+        return read_file(JSON_FAIL_DIR), 400
 
 @app.route('/logout', methods = ['POST'])
 def logout():
@@ -58,20 +60,20 @@ def logout():
         if ret['success'] == False: raise Exception('Operation failed!')
         return flask.jsonify(ret)
     except:
-        return read_file('examples/response_generic_fail.json'), 400
+        return read_file(JSON_FAIL_DIR), 400
 
 @app.route('/ships', methods = ['POST'])
 def ships():
-    # try:
+    try:
         content = flask.request.json
         token = content['token']
         try:
             ret = operations.get_ships(token)
             return flask.jsonify(ret)
         except PermissionError as ex:
-            return read_file('examples/response_generic_fail.json'), 403
-    # except:
-    #     return read_file('examples/response_generic_fail.json'), 400
+            return read_file(JSON_FAIL_DIR), 403
+    except:
+        return read_file(JSON_FAIL_DIR), 400
 
 @app.route('/ships/<id>', methods = ['POST'])
 def ships_id(id):
@@ -82,9 +84,24 @@ def ships_id(id):
             ret = operations.get_ship(token, id)
             return flask.jsonify(ret)
         except PermissionError as ex:
-            return read_file('examples/response_generic_fail.json'), 403
+            return read_file(JSON_FAIL_DIR), 403
     except:
-        return read_file('examples/response_generic_fail.json'), 400
+        return read_file(JSON_FAIL_DIR), 400
+
+@app.route('/shipLocation/<id>', methods = ['POST'])
+def ship_location_id(id):
+    try:
+        content = flask.request.json
+        token = content['token']
+        recipient = content['recipient']
+        body = content['body']
+        try:
+            ret = operations.send_message(token, recipient, body)
+            return flask.jsonify(ret)
+        except PermissionError as ex:
+            return read_file(JSON_FAIL_DIR), 403
+    except:
+        return read_file(JSON_FAIL_DIR), 400
 
 @app.route('/bookShip/<id>', methods = ['POST'])
 def book_ship(id):
@@ -98,18 +115,48 @@ def booked_ships():
 
 @app.route('/receiveMessages', methods = ['POST'])
 def receive_messages():
-    #TODO: implement properly
-    return read_file('examples/response_messagereceive_success.json')
+    try:
+        content = flask.request.json
+        token = content['token']
+        try:
+            ret = operations.get_new_messages(token)
+            return flask.jsonify(ret)
+        except PermissionError as ex:
+            return read_file(JSON_FAIL_DIR), 403
+    except:
+        return read_file(JSON_FAIL_DIR), 400
 
 @app.route('/sendMessage', methods = ['POST'])
 def send_message():
-    #TODO: implement properly
-    return read_file('examples/response_generic_success.json')
+    try:
+        content = flask.request.json
+        token = content['token']
+        try:
+            ret = operations.get_ships(token)
+            return flask.jsonify(ret)
+        except PermissionError as ex:
+            return read_file(JSON_FAIL_DIR), 403
+    except:
+        return read_file(JSON_FAIL_DIR), 400
 
 @app.route('/addShip', methods = ['POST'])
 def add_ship():
-    #TODO: implement properly
-    return '{ "success": true, "id": 0 }'
+    try:
+        content = flask.request.json
+        token = content['token']
+
+        # fix missing values by inserting placeholders
+        content['ship']['id'] = -1 
+        content['ship']['owner'] = ''
+        
+        ship = dacite.from_dict(data_class=models.Ship, data=content['ship'])
+        try:
+            ret = operations.add_ship(token, ship)
+            return flask.jsonify(ret)
+        except PermissionError as ex:
+            return read_file(JSON_FAIL_DIR), 403
+    except:
+        return read_file(JSON_FAIL_DIR), 400
 
 @app.route('/updateShip', methods = ['POST'])
 def update_ship():

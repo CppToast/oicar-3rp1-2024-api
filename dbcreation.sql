@@ -691,18 +691,19 @@ CREATE TABLE Message (
     SenderID int FOREIGN KEY REFERENCES RegisteredUser(IDUser),
     RecipientID int FOREIGN KEY REFERENCES RegisteredUser(IDUser),
     Body nvarchar(200),
-    IsDelivered bit
+    IsDelivered bit,
+    SentTime datetime
 );
 GO
 
 --CRUD Operations SQL:
 
 CREATE PROCEDURE InsertMessage
-    @SenderID int, @RecipientID int, @Body nvarchar(200), @IsDelivered bit
+    @SenderID int, @RecipientID int, @Body nvarchar(200), @IsDelivered bit, @SentTime datetime
 AS
 BEGIN
-    INSERT INTO Message (SenderID, RecipientID, Body, IsDelivered)
-    VALUES (@SenderID, @RecipientID, @Body, @IsDelivered);
+    INSERT INTO Message (SenderID, RecipientID, Body, IsDelivered, SentTime)
+    VALUES (@SenderID, @RecipientID, @Body, @IsDelivered, @SentTime);
 END;
 
 GO
@@ -738,11 +739,11 @@ GO
 
 CREATE PROCEDURE UpdateMessage
     @IDMessage int,
-    @SenderID int, @RecipientID int, @Body nvarchar(200), @IsDelivered bit
+    @SenderID int, @RecipientID int, @Body nvarchar(200), @IsDelivered bit, @SentTime datetime
 AS
 BEGIN
     UPDATE Message
-    SET SenderID = @SenderID, RecipientID = @RecipientID, Body = @Body, IsDelivered = @IsDelivered
+    SET SenderID = @SenderID, RecipientID = @RecipientID, Body = @Body, IsDelivered = @IsDelivred, SentTime = @SentTime
     WHERE IDMessage = @IDMessage;
 END;
 

@@ -1,15 +1,18 @@
 import pyodbc
+import datetime
 
 import models
 
 DRIVER = '{ODBC Driver 17 for SQL Server}'
-SERVER = '192.168.1.97'
+SERVER = '192.168.88.97'
 DATABASE = 'PrachtYacht'
 USERNAME = 'sa'
 PASSWORD = 'Oicarbaza123'
 
 connectionString = f'DRIVER={DRIVER};SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
+print("Connecting to database...")
 conn = pyodbc.connect(connectionString)
+print("Connected!")
 
 cursor = conn.cursor()
 
@@ -295,6 +298,8 @@ def create_ship(ship):
     for i in ship.crew:
         assign_crew_to_ship(i, ship_id)
     
+    return ship_id
+    
 
 # Links
 def assign_equipment_to_ship(equipment, ship_id):
@@ -307,3 +312,31 @@ def assign_crew_to_ship(crew, ship_id):
     call_procedure('InsertShipCrewRole', [ship_id, crew_id])
     commit()
 
+# Messages
+def send_message(sender_id, recipient_id, body):
+    timestamp = datetime.datetime.now()
+    call_procedure('InsertMessage', [sender_id, recipient_id, timestamp, body])
+    commit()
+
+def get_new_messages(recipient_id):
+    call_procedure('SelectUndeliveredMessages', [recipient_id])
+    data = cursor.fetchall()
+    messages = []
+    ids = []
+    for i in data:
+        sender = i[1]
+        recipient = i[2]
+        body = i[3]
+        timestamp = i[5]
+        messages.append(Message(sender, recipient, timestamp, body))
+
+        ids.append(i[0])
+    
+    for i in ids:
+        mark_message_as_delivered(i)
+    
+    return messages
+
+def mark_message_as_delivered(message_id):
+    call_procedure('MarkMessagesAsDelivered', [message_id])
+    commit()

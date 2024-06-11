@@ -6,3 +6,4 @@ API + Database code for Pracht Yacht.
 pyodbc
 bs4
 flask
+dacite

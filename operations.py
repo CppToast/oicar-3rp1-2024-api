@@ -11,6 +11,13 @@ def token_is_valid(guid):
     except:
         return False
 
+def user_is_renter(guid):
+    try:
+        user = get_current_user(guid)
+        return user.renter
+    except:
+        return False
+
 def generate_token():
     return uuid.uuid4()
 
@@ -68,8 +75,17 @@ def get_ship(guid, id):
     return database.get_ship(id)
 
 def get_ship_location(guid, id):
-    #TODO: implement properly
-    return
+    if not token_is_valid(guid): raise PermissionError('Invalid token!')
+    
+    # This is where we would communicate with the ship's GPS and determine the
+    # location, but since we're faking it, might as well fake it here. No need
+    # to store it to the DB.
+    
+    return {
+        "success": True,
+        'latitude': 43.645218,
+        'longitude': 15.194806
+    }
 
 def book_ship(guid, id):
     #TODO: implement properly
@@ -80,21 +96,46 @@ def get_booked_ships(guid):
     return
 
 def receive_messages(guid):
-    #TODO: implement properly
-    return
+    if not token_is_valid(guid): raise PermissionError('Invalid token!')
+    user = get_current_user(guid)
+    return database.get_new_messages(user)
 
-def send_message(guid, message):
-    #TODO: implement properly
-    return
+def send_message(guid, recipient, body):
+    if not token_is_valid(guid): raise PermissionError('Invalid token!')
+    try:
+        sender_id = get_current_user(guid)
+        recipient_id = database.get_user_by_username(recipient).id
+        send_message(sender_id, recipient_id, body)
+        return {'success': True}
+    except:
+        return {'success': False}
 
 def add_ship(guid, ship):
-    #TODO: implement properly
-    return
+    if not token_is_valid(guid): raise PermissionError('Invalid token!')
+    if not user_is_renter(guid): raise PermissionError('Permission denied!')
+    try:
+        ship.owner = get_current_user(guid).username
+        ship_id = database.create_ship(ship)
+        return {'success': True, 'id': ship_id}
+    except:
+        return {'success': False}
 
 def update_ship(guid, ship):
-    #TODO: implement properly
-    return
+    if not token_is_valid(guid): raise PermissionError('Invalid token!')
+    if not user_is_renter(guid): raise PermissionError('Permission denied!')
+    try:
+        ship.owner = get_current_user(guid).username
+        ship_id = database.create_ship(ship)
+        return {'success': True, 'id': ship_id}
+    except:
+        return {'success': False}
 
 def delete_ship(guid, id):
-    #TODO: implement properly
-    return
+    if not token_is_valid(guid): raise PermissionError('Invalid token!')
+    if not user_is_renter(guid): raise PermissionError('Permission denied!')
+    try:
+        ship.owner = get_current_user(guid).username
+        ship_id = database.create_ship(ship)
+        return {'success': True, 'id': ship_id}
+    except:
+        return {'success': False}
