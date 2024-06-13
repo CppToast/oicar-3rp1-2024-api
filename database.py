@@ -299,8 +299,45 @@ def create_ship(ship):
         assign_crew_to_ship(i, ship_id)
     
     return ship_id
-    
 
+def update_ship(ship):
+    route_id = create_route(ship.route)
+
+    call_procedure('UpdateShip', [
+        ship.id,
+        get_user_by_username(ship.owner).id,
+        ship.type,
+        ship.length,
+        ship.berths,
+        ship.bathrooms,
+        route_id
+    ])
+    commit()
+
+    delete_all_links(ship.id)
+    for i in ship.equipment:
+        assign_equipment_to_ship(i, ship_id)
+    for i in ship.crew:
+        assign_crew_to_ship(i, ship_id)
+
+    commit()
+
+def delete_ship(ship_id):
+    call_procedure('SelectShipEquipment')
+    all_equipment = cursor.fetchall()
+    for i in all_equipment:
+        if i[1] == ship_id:
+            call_procedure('DeleteShipEquipment', [i[0]])
+
+    call_procedure('SelectShipCrewRole')
+    all_crew = cursor.fetchall()
+    for i in all_crew:
+        if i[1] == ship_id:
+            call_procedure('DeleteShipCrewRole', [i[0]])
+
+    call_procedure('DeleteShip', [ship_id])
+    commit()
+    
 # Links
 def assign_equipment_to_ship(equipment, ship_id):
     equipment_id = get_or_create_equipment_id(equipment)
@@ -311,6 +348,33 @@ def assign_crew_to_ship(crew, ship_id):
     crew_id = get_or_create_crew_id(crew)
     call_procedure('InsertShipCrewRole', [ship_id, crew_id])
     commit()
+
+def delete_all_links(ship_id):
+    call_procedure('SelectShipEquipment')
+    all_equipment = cursor.fetchall()
+    for i in all_equipment:
+        if i[1] == ship_id:
+            call_procedure('DeleteShipEquipment', [i[0]])
+
+    call_procedure('SelectShipCrewRole')
+    all_crew = cursor.fetchall()
+    for i in all_crew:
+        if i[1] == ship_id:
+            call_procedure('DeleteShipCrewRole', [i[0]])
+    commit()
+
+# Bookings
+def book_ship(user_id, ship_id):
+    call_procedure('InsertBooking', [user_id, ship_id])
+    commit()
+
+def get_booked_ships(user_id):
+    call_procedure('SelectUsersBookings', [user_id])
+    bookings = cursor.fetchall()
+    ships = []
+    for i in bookings:
+        ships.append(get_ship(i[1]))
+    return ships
 
 # Messages
 def send_message(sender_id, recipient_id, body):

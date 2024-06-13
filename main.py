@@ -105,13 +105,29 @@ def ship_location_id(id):
 
 @app.route('/bookShip/<id>', methods = ['POST'])
 def book_ship(id):
-    #TODO: implement properly
-    return read_file('examples/response_generic_success.json')
+    try:
+        content = flask.request.json
+        token = content['token']
+        try:
+            ret = operations.book_ship(token, id)
+            return flask.jsonify(ret)
+        except PermissionError as ex:
+            return read_file(JSON_FAIL_DIR), 403
+    except:
+        return read_file(JSON_FAIL_DIR), 400
 
 @app.route('/bookedShips', methods = ['POST'])
 def booked_ships():
-    #TODO: implement properly
-    return read_file('examples/response_ships_success.json')
+    try:
+        content = flask.request.json
+        token = content['token']
+        try:
+            ret = operations.get_booked_ships(token)
+            return flask.jsonify(ret)
+        except PermissionError as ex:
+            return read_file(JSON_FAIL_DIR), 403
+    except:
+        return read_file(JSON_FAIL_DIR), 400
 
 @app.route('/receiveMessages', methods = ['POST'])
 def receive_messages():
@@ -160,13 +176,34 @@ def add_ship():
 
 @app.route('/updateShip', methods = ['POST'])
 def update_ship():
-    #TODO: implement properly
-    return read_file('examples/response_generic_success.json')
+    try:
+        content = flask.request.json
+        token = content['token']
+
+        # fix missing values by inserting placeholders
+        content['ship']['owner'] = ''
+        
+        ship = dacite.from_dict(data_class=models.Ship, data=content['ship'])
+        try:
+            ret = operations.update_ship(token, ship)
+            return flask.jsonify(ret)
+        except PermissionError as ex:
+            return read_file(JSON_FAIL_DIR), 403
+    except:
+        return read_file(JSON_FAIL_DIR), 400
 
 @app.route('/deleteShip/<id>', methods = ['POST'])
 def delete_ship(id):
-    #TODO: implement properly
-    return read_file('examples/response_generic_success.json')
+    try:
+        content = flask.request.json
+        token = content['token']
+        try:
+            ret = operations.delete_ship(token, id)
+            return flask.jsonify(ret)
+        except PermissionError as ex:
+            return read_file(JSON_FAIL_DIR), 403
+    except:
+        return read_file(JSON_FAIL_DIR), 400
 
 
 app.run(host='0.0.0.0')
