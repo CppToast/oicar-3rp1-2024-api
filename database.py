@@ -312,29 +312,18 @@ def update_ship(ship):
         ship.bathrooms,
         route_id
     ])
-    commit()
+    # commit()
 
     delete_all_links(ship.id)
     for i in ship.equipment:
-        assign_equipment_to_ship(i, ship_id)
+        assign_equipment_to_ship(i, ship.id)
     for i in ship.crew:
-        assign_crew_to_ship(i, ship_id)
+        assign_crew_to_ship(i, ship.id)
 
     commit()
 
 def delete_ship(ship_id):
-    call_procedure('SelectShipEquipment')
-    all_equipment = cursor.fetchall()
-    for i in all_equipment:
-        if i[1] == ship_id:
-            call_procedure('DeleteShipEquipment', [i[0]])
-
-    call_procedure('SelectShipCrewRole')
-    all_crew = cursor.fetchall()
-    for i in all_crew:
-        if i[1] == ship_id:
-            call_procedure('DeleteShipCrewRole', [i[0]])
-
+    delete_all_links(ship_id)
     call_procedure('DeleteShip', [ship_id])
     commit()
     
@@ -350,17 +339,9 @@ def assign_crew_to_ship(crew, ship_id):
     commit()
 
 def delete_all_links(ship_id):
-    call_procedure('SelectShipEquipment')
-    all_equipment = cursor.fetchall()
-    for i in all_equipment:
-        if i[1] == ship_id:
-            call_procedure('DeleteShipEquipment', [i[0]])
-
-    call_procedure('SelectShipCrewRole')
-    all_crew = cursor.fetchall()
-    for i in all_crew:
-        if i[1] == ship_id:
-            call_procedure('DeleteShipCrewRole', [i[0]])
+    call_procedure('DeleteShipEquipmentFromShip', [ship_id])
+    commit()
+    call_procedure('DeleteShipCrewRoleFromShip', [ship_id])
     commit()
 
 # Bookings

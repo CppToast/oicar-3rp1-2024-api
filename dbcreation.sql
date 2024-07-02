@@ -448,6 +448,15 @@ BEGIN
 END;
 
 GO
+
+CREATE PROCEDURE DeleteShipEquipmentFromShip
+    @ShipID int
+AS
+BEGIN
+    DELETE FROM ShipEquipment WHERE ShipID = @ShipID;
+END;
+
+GO
 --CrewRole
 --Table Creation SQL:
 CREATE TABLE CrewRole (
@@ -562,6 +571,15 @@ CREATE PROCEDURE DeleteShipCrewRole
 AS
 BEGIN
     DELETE FROM ShipCrewRole WHERE IDShipCrewRole = @IDShipCrewRole;
+END;
+
+GO
+
+CREATE PROCEDURE DeleteShipCrewRoleFromShip
+    @ShipID int
+AS
+BEGIN
+    DELETE FROM ShipCrewRole WHERE ShipID = @ShipID;
 END;
 
 GO
@@ -743,7 +761,7 @@ CREATE PROCEDURE UpdateMessage
 AS
 BEGIN
     UPDATE Message
-    SET SenderID = @SenderID, RecipientID = @RecipientID, Body = @Body, IsDelivered = @IsDelivred, SentTime = @SentTime
+    SET SenderID = @SenderID, RecipientID = @RecipientID, Body = @Body, IsDelivered = @IsDelivered, SentTime = @SentTime
     WHERE IDMessage = @IDMessage;
 END;
 

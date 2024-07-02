@@ -46,7 +46,6 @@ def login():
         username = content['username']
         password = content['password']
         ret = operations.login(username, password)
-        if ret['success'] == False: raise Exception('Operation failed!')
         return flask.jsonify(ret)
     except:
         return read_file(JSON_FAIL_DIR), 400
@@ -57,7 +56,6 @@ def logout():
         content = flask.request.json
         token = content['token']
         ret = operations.logout(token)
-        if ret['success'] == False: raise Exception('Operation failed!')
         return flask.jsonify(ret)
     except:
         return read_file(JSON_FAIL_DIR), 400

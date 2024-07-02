@@ -56,7 +56,7 @@ def login(username, password):
         token = database.register_token(user.id, generate_token())
         return {'success': True, 'token': token.guid}
     except:
-        return {'success': False}
+        raise Exception('Operation failed!')
 
 def logout(guid):
     try:
@@ -64,7 +64,7 @@ def logout(guid):
         database.unregister_token(token)
         return {'success': True}
     except:
-        return {'success': False}
+        raise Exception('Operation failed!')
 
 def get_ships(guid):
     if not token_is_valid(guid): raise PermissionError('Invalid token!')
@@ -94,7 +94,7 @@ def book_ship(guid, id):
         database.book_ship(user.id, id)
         return {'success': True}
     except:
-        return {'success': False}
+        raise Exception('Operation failed!')
 
 def get_booked_ships(guid):
     if not token_is_valid(guid): raise PermissionError('Invalid token!')
@@ -114,7 +114,7 @@ def send_message(guid, recipient, body):
         database.send_message(sender_id, recipient_id, body)
         return {'success': True}
     except:
-        return {'success': False}
+        raise Exception('Operation failed!')
 
 def add_ship(guid, ship):
     if not token_is_valid(guid): raise PermissionError('Invalid token!')
@@ -124,7 +124,7 @@ def add_ship(guid, ship):
         ship_id = database.create_ship(ship)
         return {'success': True, 'id': ship_id}
     except:
-        return {'success': False}
+        raise Exception('Operation failed!')
 
 def update_ship(guid, ship):
     if not token_is_valid(guid): raise PermissionError('Invalid token!')
@@ -134,14 +134,13 @@ def update_ship(guid, ship):
         database.update_ship(ship)
         return {'success': True}
     except:
-        return {'success': False}
+        raise Exception('Operation failed!')
 
 def delete_ship(guid, id):
     if not token_is_valid(guid): raise PermissionError('Invalid token!')
     if not user_is_renter(guid): raise PermissionError('Permission denied!')
     try:
-        ship.owner = get_current_user(guid).username
         database.delete_ship(id)
         return {'success': True}
     except:
-        return {'success': False}
+        raise Exception('Operation failed!')
