@@ -66,6 +66,16 @@ def logout(guid):
     except:
         raise Exception('Operation failed!')
 
+def delete_user(guid, password):
+    try:
+        user = get_current_user(guid)
+        if user.passwordhash != hash_password(password): raise Exception('Invalid password!')
+
+        token = database.delete_user(user.id)
+        return {'success': True}
+    except:
+        raise Exception('Operation failed!')
+
 def get_ships(guid):
     if not token_is_valid(guid): raise PermissionError('Invalid token!')
     return database.get_ships()

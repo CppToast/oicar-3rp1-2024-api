@@ -60,6 +60,18 @@ def logout():
     except:
         return read_file(JSON_FAIL_DIR), 400
 
+@app.route('/deleteUserAccount', methods = ['POST'])
+def login():
+    try:
+        content = flask.request.json
+        token = content['token']
+        password = content['password']
+        ret = operations.delete_user(token, password)
+        ret = operations.logout(token)
+        return flask.jsonify(ret)
+    except:
+        return read_file(JSON_FAIL_DIR), 400
+
 @app.route('/ships', methods = ['POST'])
 def ships():
     try:

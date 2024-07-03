@@ -69,6 +69,10 @@ def register_user(user):
     call_procedure('InsertRegisteredUser', [user.email, user.username, user.passwordhash, user.renter])
     commit()
 
+def delete_user(id):
+    global cursor
+    call_procedure('UpdateRegisteredUser', [id, '<deleted>', '<deleted>', '<deleted>', False])
+    commit()
 
 # Token
 def get_token(guid):
